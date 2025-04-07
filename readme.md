@@ -1,4 +1,3 @@
-````
 # Chat Application Setup
 
 This document outlines the steps to set up and run the Chat Application, which consists of a React JS frontend and a Nest JS backend.
@@ -58,7 +57,7 @@ This document outlines the steps to set up and run the Chat Application, which c
 2.  **Database Setup:**
 
     - Create a PostgreSQL database named `chatapp`.
-    - If you choose a different database name, make sure to update the `POSTGRES_DATABASE` configuration variables in the `.env` file accordingly.
+    - If you choose a different database name, ensure you update the `POSTGRES_DATABASE` configuration variable in the `.env` file accordingly.
 
 3.  **Installation:**
     Navigate to the Nest JS project directory in your terminal and execute the following command:
@@ -76,5 +75,4 @@ This document outlines the steps to set up and run the Chat Application, which c
     npm run start
     ```
 
-    The Nest JS backend will start running and be ready to handle API requests from the React JS frontend. The default port for this application is 5000 and can be changed using `.env` file.
-````
+    The Nest JS backend will start running and be ready to handle API requests from the React JS frontend. The default port for this application is 5000 and can be changed using the `.env` file.
