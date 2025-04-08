@@ -14,7 +14,7 @@ import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router";
 
 import BusinessIcon from "@mui/icons-material/Business";
-import { userOneEmail, userTwoEmail } from "../utils/constants";
+import { postRequest } from "../utils/apiService";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -54,14 +54,25 @@ export default function SignInCard() {
 
     const data = new FormData(event.currentTarget);
 
-    sessionStorage.setItem(
-      "activeUser",
-      JSON.stringify({
-        email: data.get("email"),
-      })
-    );
+    const payload = {
+      email: data.get("email"),
+      password: data.get("password"),
+    };
 
-    return navigate("/dashboard");
+    postRequest("users/login", JSON.stringify(payload))
+      .then((response) => {
+        sessionStorage.setItem(
+          "activeUser",
+          JSON.stringify({
+            email: response.email,
+          })
+        );
+
+        return navigate("/dashboard");
+      })
+      .catch(() => {
+        //
+      });
   };
 
   const validateInputs = () => {
@@ -73,10 +84,6 @@ export default function SignInCard() {
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
       setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else if (email.value !== userOneEmail && email.value !== userTwoEmail) {
-      setEmailError(true);
-      setEmailErrorMessage("User not found.");
       isValid = false;
     } else {
       setEmailError(false);
@@ -93,6 +100,10 @@ export default function SignInCard() {
     }
 
     return isValid;
+  };
+
+  const handleSignUp = () => {
+    return navigate("/sign-up");
   };
 
   return (
@@ -152,6 +163,14 @@ export default function SignInCard() {
         <Button type="submit" fullWidth variant="contained">
           Sign in
         </Button>
+        <Typography sx={{ textAlign: "center" }}>
+          Don&apos;t have an account?{" "}
+          <span>
+            <Link onClick={handleSignUp} variant="body2" sx={{ alignSelf: "center" }}>
+              Sign up
+            </Link>
+          </span>
+        </Typography>
       </Box>
     </Card>
   );

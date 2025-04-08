@@ -3,7 +3,8 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router";
 
 import LoginPage from "./pages/login";
-import ChatbotPage from "./pages/chatbot";
+import Dashboard from "./pages/dashboard/dashboard";
+import SignUp from "./components/signUp";
 
 function App() {
   const router = createBrowserRouter([
@@ -13,7 +14,11 @@ function App() {
     },
     {
       path: "/dashboard",
-      element: <ChatbotPage />,
+      element: <Dashboard />,
+    },
+    {
+      path: "/sign-up",
+      element: <SignUp />,
     },
   ]);
 

@@ -24,9 +24,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
 }
 
@@ -49,8 +46,20 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.chat-bot-page {
-  font-family: monospace;
+.dashboard-page {
+  display: flex;
+  gap: 10px;
+  min-height: 100vh;
+}
+
+.chat-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.chat-box {
   border-radius: 10px;
   box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.15);
   background: #f5f8fb;
@@ -58,6 +67,7 @@ button:focus-visible {
   display: flex;
   flex-flow: column;
   width: 500px;
+  height: 510px;
   overflow: hidden;
 }
 

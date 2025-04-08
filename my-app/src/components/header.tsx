@@ -2,8 +2,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Tooltip } from "@mui/material";
 
 import { useNavigate } from "react-router";
+import { ChatInterfaces } from "../utils/interfaces";
 
-export default function Header() {
+export default function Header(props: { selectedUser: ChatInterfaces.User | null }) {
   let navigate = useNavigate();
 
   const handleLogout = () => {
@@ -13,7 +14,7 @@ export default function Header() {
 
   return (
     <div className="header">
-      &nbsp;Welcome to ChatApp IO
+      &nbsp;{props.selectedUser?.email}
       <Tooltip title="logout">
         <LogoutIcon className="logout-icon" onClick={handleLogout} />
       </Tooltip>

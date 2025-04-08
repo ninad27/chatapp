@@ -12,4 +12,15 @@ export namespace ChatInterfaces {
   export interface UserMessageProps {
     text: string;
   }
+
+  export interface User {
+    id: number;
+    email: string;
+  }
+
+  export interface UserListPanelProps {
+    userList: ChatInterfaces.User[];
+    selectUser: (user: ChatInterfaces.User) => void;
+    selectedUser: ChatInterfaces.User | null;
+  }
 }
