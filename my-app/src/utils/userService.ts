@@ -14,3 +14,20 @@ export const getCurrentUserEmail = () => {
     return "";
   }
 };
+
+export const getCurrentUserId = () => {
+  try {
+    const activeUser = sessionStorage.getItem("activeUser");
+
+    if (!activeUser) {
+      console.error("user not found");
+      return;
+    }
+
+    const id = JSON.parse(activeUser).id;
+
+    return id;
+  } catch {
+    return "";
+  }
+};

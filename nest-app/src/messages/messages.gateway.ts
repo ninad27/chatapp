@@ -19,14 +19,21 @@ export class MessagesGateway {
   @SubscribeMessage('createMessage')
   async create(@MessageBody() createMessageDto: CreateMessageDto) {
     const message = await this.messagesService.create(createMessageDto);
-    this.server.emit('createMessage', message);
+    this.server.emit('newMessage');
     return message;
   }
 
   @SubscribeMessage('findAllMessages')
-  async findAll() {
-    const messages = await this.messagesService.findAll();
-    this.server.emit('findAllMessages', messages);
+  async findAll(
+    @MessageBody() data: { selectedUser: number; currentUser: number },
+  ) {
+    const { selectedUser, currentUser } = data;
+
+    const messages = await this.messagesService.findAll(
+      selectedUser,
+      currentUser,
+    );
+
     return messages;
   }
 }

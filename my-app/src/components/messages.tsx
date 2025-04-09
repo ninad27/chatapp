@@ -1,13 +1,13 @@
 import { RefObject, useEffect, useRef } from "react";
 
-import { getCurrentUserEmail } from "../utils/userService";
+import { getCurrentUserId } from "../utils/userService";
 
 import UserMessage from "./userMessage";
 import ResponseMessage from "./responseMessage";
 import { ChatInterfaces } from "../utils/interfaces";
 
 export default function Messages({ messages }: { messages: ChatInterfaces.message[] }) {
-  const email = getCurrentUserEmail();
+  const currentUserId = getCurrentUserId();
   const el: RefObject<HTMLDivElement | null> = useRef(null);
   useEffect(() => {
     if (!el?.current) {
@@ -19,9 +19,9 @@ export default function Messages({ messages }: { messages: ChatInterfaces.messag
   return (
     <div className="messages">
       {messages.map((message, index: number) =>
-        message.from === email ? (
+        message.from === currentUserId ? (
           <UserMessage key={index} text={message.message} />
-        ) : message.to === email ? (
+        ) : message.to === currentUserId ? (
           <ResponseMessage key={index} text={message.message} />
         ) : null
       )}

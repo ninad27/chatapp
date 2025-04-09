@@ -61,12 +61,7 @@ export default function SignInCard() {
 
     postRequest("users/login", JSON.stringify(payload))
       .then((response) => {
-        sessionStorage.setItem(
-          "activeUser",
-          JSON.stringify({
-            email: response.email,
-          })
-        );
+        sessionStorage.setItem("activeUser", JSON.stringify(response));
 
         return navigate("/dashboard");
       })

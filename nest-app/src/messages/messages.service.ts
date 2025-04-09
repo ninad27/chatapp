@@ -20,7 +20,19 @@ export class MessagesService {
     return this.messageRepository.save(newMessage);
   }
 
-  findAll() {
-    return this.messageRepository.find();
+  async findAll(selectedUser: number, currentUser: number) {
+    const messages = await this.messageRepository
+      .createQueryBuilder('message')
+      .where('message.from = :selectedUser AND message.to = :currentUser', {
+        selectedUser,
+        currentUser,
+      })
+      .orWhere('message.from = :currentUser AND message.to = :selectedUser', {
+        selectedUser,
+        currentUser,
+      })
+      .getMany();
+
+    return messages;
   }
 }

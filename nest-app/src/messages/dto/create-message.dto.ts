@@ -1,18 +1,16 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+// src/messages/dto/create-message.dto.ts
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateMessageDto {
-  @IsString()
-  @MinLength(2, { message: 'from must have atleast 2 characters.' })
+  @IsNumber()
   @IsNotEmpty()
-  from: string;
+  from: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  to: number;
 
   @IsString()
-  @MinLength(2, { message: 'to must have atleast 2 characters.' })
-  @IsNotEmpty()
-  to: string;
-
-  @IsString()
-  @MinLength(2, { message: 'message must have atleast 2 characters.' })
   @IsNotEmpty()
   message: string;
 }

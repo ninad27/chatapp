@@ -39,7 +39,7 @@ export class UsersController {
     );
 
     if (!user) {
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
     return user;

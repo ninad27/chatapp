@@ -11,11 +11,11 @@ export class Message {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
-  from: string;
+  @Column({ type: 'int' })
+  from: number;
 
-  @Column({ type: 'varchar' })
-  to: string;
+  @Column({ type: 'int' })
+  to: number;
 
   @Column({ type: 'varchar' })
   message: string;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import Header from "../../components/header";
@@ -6,10 +6,9 @@ import MessageInput from "../../components/messageInput";
 import Messages from "../../components/messages";
 import { UserList } from "../../components/userList";
 
-import { getCurrentUserEmail } from "../../utils/userService";
+import { getCurrentUserEmail, getCurrentUserId } from "../../utils/userService";
 import { socket } from "../../utils/socket";
 import { ChatInterfaces } from "../../utils/interfaces";
-import { userOneEmail, userTwoEmail } from "../../utils/constants";
 import { getRequest } from "../../utils/apiService";
 
 export default function Dashboard() {
@@ -17,73 +16,93 @@ export default function Dashboard() {
   const [selectedUser, setSelectedUser] = useState<ChatInterfaces.User | null>(null);
   const [messages, setMessages] = useState<ChatInterfaces.message[]>([]);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const email = getCurrentUserEmail();
+
+  const previousSelectedUser = useRef<ChatInterfaces.User | null>(null);
+
+  const loadAllMessages = (): void => {
+    const currentUserId = getCurrentUserId();
+
+    const payload = {
+      selectedUser: selectedUser?.id,
+      currentUser: currentUserId,
+    };
+
+    if (payload.selectedUser === undefined || payload.selectedUser === null) {
+      return;
+    }
+
+    socket.emit("findAllMessages", payload, (responseMessages: ChatInterfaces.message[]) => {
+      setMessages(responseMessages);
+    });
+  };
 
   useEffect(() => {
-    const email = getCurrentUserEmail();
     if (!email) {
       navigate("/");
     } else {
-      implementSocket();
       getUserList();
     }
   }, []);
 
-  const getUserList = () => {
+  useEffect(() => {
+    if (selectedUser && previousSelectedUser.current === null) {
+      implementSocket();
+    } else {
+      loadAllMessages();
+    }
+    previousSelectedUser.current = selectedUser;
+  }, [selectedUser]);
+
+  const getUserList = (): void => {
     getRequest("users")
       .then((response) => {
-        setUserList(response);
-        if (response.length > 0) {
-          setSelectedUser(response[0]);
+        const currentUserId = getCurrentUserId();
+
+        const otherUsers = response.filter((user: ChatInterfaces.User) => {
+          return user.id !== currentUserId;
+        });
+
+        setUserList(otherUsers);
+        if (otherUsers.length > 0) {
+          setSelectedUser(otherUsers[0]);
         }
       })
       .catch(() => {
-        //
+        // Handle error if needed
       });
   };
 
-  const implementSocket = () => {
+  const implementSocket = (): (() => void) => {
     socket.connect(); // connect to socket
 
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
-    socket.on("findAllMessages", getAllMessages);
-    socket.on("createMessage", handleChat);
+    socket.on("newMessage", () => loadAllMessages());
 
     // remove all event listeners
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
-      socket.off("findAllMessages", getAllMessages);
-      socket.off("createMessage", handleChat);
+      socket.off("newMessage", () => loadAllMessages());
       socket.disconnect();
     };
   };
 
-  const handleConnect = () => {
-    console.log("Socket connected");
-    socket.emit("findAllMessages");
+  const handleConnect = (): void => {
+    loadAllMessages();
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = (): void => {
     console.log("Socket disconnected");
   };
 
-  const handleChat = (newMessage: ChatInterfaces.message) => {
-    console.log("newMessage", newMessage);
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
+  const send = async (inputValue: string): Promise<void> => {
+    const currentUserId = getCurrentUserId();
 
-  const getAllMessages = (allMessages: ChatInterfaces.message[]) => {
-    setMessages(allMessages);
-  };
-
-  const send = async (inputValue: string) => {
     if (inputValue.trim().length === 0) return;
-
-    const email = getCurrentUserEmail();
-    const to = email === userOneEmail ? userTwoEmail : userOneEmail;
-    socket.emit("createMessage", { from: email, to: to, message: inputValue.trim() });
+    socket.emit("createMessage", { from: currentUserId, to: selectedUser?.id, message: inputValue.trim() });
   };
 
   return (
