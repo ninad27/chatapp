@@ -2,7 +2,7 @@ import "./App.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router";
 
-import LoginPage from "./pages/login";
+import LoginPage from "./pages/login/login";
 import Dashboard from "./pages/dashboard/dashboard";
 import SignUp from "./components/signUp";
 

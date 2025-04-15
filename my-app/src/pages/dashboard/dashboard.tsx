@@ -25,7 +25,7 @@ export default function Dashboard() {
     const currentUserId = getCurrentUserId();
 
     const payload = {
-      selectedUser: selectedUser?.id,
+      selectedUser: previousSelectedUser?.current?.id || selectedUser?.id,
       currentUser: currentUserId,
     };
 
@@ -42,17 +42,14 @@ export default function Dashboard() {
     if (!email) {
       navigate("/");
     } else {
+      implementSocket();
       getUserList();
     }
   }, []);
 
   useEffect(() => {
-    if (selectedUser && previousSelectedUser.current === null) {
-      implementSocket();
-    } else {
-      loadAllMessages();
-    }
     previousSelectedUser.current = selectedUser;
+    loadAllMessages();
   }, [selectedUser]);
 
   const getUserList = (): void => {

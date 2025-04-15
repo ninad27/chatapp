@@ -1,12 +1,11 @@
 import Stack from "@mui/material/Stack";
-// import ColorModeSelect from "../shared-theme/ColorModeSelect";
-import SignInCard from "../components/signInCard";
-import Content from "../components/content";
+
+import SignInCard from "../../components/signInCard";
+import Content from "../../components/content";
 
 export default function LoginPage() {
   return (
     <>
-      {/* <ColorModeSelect sx={{ position: "fixed", top: "1rem", right: "1rem" }} /> */}
       <Stack
         direction="column"
         component="main"
