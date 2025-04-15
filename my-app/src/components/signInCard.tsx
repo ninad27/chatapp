@@ -65,8 +65,8 @@ export default function SignInCard() {
 
         return navigate("/dashboard");
       })
-      .catch(() => {
-        //
+      .catch((error) => {
+        alert(error?.message || "Failed to login");
       });
   };
 

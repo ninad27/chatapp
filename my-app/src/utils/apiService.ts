@@ -8,16 +8,15 @@ interface RequestOptions {
 
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ message: response.statusText }));
-    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch (e) {
+      errorData = { message: response.statusText };
+    }
+    throw errorData;
   }
   return response.json();
-};
-
-const handleError = (error: any) => {
-  console.error("API Error:", error);
-  alert(`An error occurred: ${error.message || "Unknown error"}`);
-  throw error; // Re-throw the error for further handling if needed
 };
 
 const makeRequest = async (endpoint: string, options: RequestOptions) => {
@@ -26,7 +25,8 @@ const makeRequest = async (endpoint: string, options: RequestOptions) => {
     const response = await fetch(api, options);
     return handleResponse(response);
   } catch (error) {
-    return handleError(error);
+    console.error("Error : ", error);
+    return error;
   }
 };
 
